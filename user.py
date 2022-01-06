@@ -1,19 +1,42 @@
 import math
-
+import json
 
 class User:
 
-    def __init__(self, sex, weight = 1, age, growth, name = "User", goals):
-        with open(event.name_of_file, "r") as read_file:
-            info = json.load(read_file)
-        self.sex = sex
-        self.weight = weight
-        self.age = age
-        self.growth = growth
-        self.name = name
-        self.goals = goals
-        self.index = 0
-        self.get_index()
+    file_users = []
+
+    def __init__(self, name, sex=None, weight=None, age=None, growth=None, goals=None):
+        self.sex = ""
+        self.weight = 1
+        self.age = 1
+        self.growth = 1
+        self.name = ""
+        self.goals = ""
+
+        if sex == "None":
+            with open("parameters.json", "r") as read_file:
+                info = json.load(read_file)
+            for ticket in info:
+                if ticket.get("Name") == name:
+                    self.sex = str(self.sex1())
+                    self.weight = int(self.weight1())
+                    self.age = int(self.age1())
+                    self.growth = int(self.growth1())
+                    self.name = name
+                    self.goals = str(self.goals1())
+                    self.index = float(self.index1())
+                    self.water = float(self.water1())
+                    self.calories = int(self.calories1())
+        else:    
+            self.sex = sex
+            self.weight = weight
+            self.age = age
+            self.growth = growth
+            self.name = name
+            self.goals = goals
+            self.index = self.get_index()
+            self.water = self.get_water()
+            self.calories = self.get_calories()
 
     @property
     def sex(self):
@@ -21,9 +44,9 @@ class User:
 
     @sex.setter
     def sex(self, sex):
-        if not isinstance(calories, str):
+        if not isinstance(sex, str):
             raise TypeError
-        self.__calories = calories
+        self.__sex = sex
 
     @property
     def weight(self):
@@ -43,7 +66,7 @@ class User:
 
     @age.setter
     def age(self, age):
-        if age <= 10:
+        if age <= 0:
             raise ZeroDivisionError
         if not isinstance(age, int):
             raise TypeError
@@ -74,72 +97,122 @@ class User:
         return self.__growth
 
     @growth.setter
-    def growth(self, int):
-        if growth <= 10:
+    def growth(self, growth):
+        if growth <= 0:
             raise ZeroDivisionError
         if not isinstance(growth, int):
             raise TypeError
         self.__growth = growth            
 
     def __str__(self):
-        return f"Name - {self.__name}\nSex - {self.sex}\nAge - {self.__age}\nWeight - {self.weight}\nGrowth - {self.growth}\n"
+        return f"Name - {self.__name}\nSex - {self.sex}\nAge - {self.__age}\nWeight - {self.weight}\nGrowth - {self.growth}\nCalories - {self.calories}\nWater - {self.water}\nIndex - {self.index}"
 
     def __float__(self):
         return self.index
 
-    def get_index():
-        self.index = self.weight / (self.growth * self.growth)    
-        
-    @staticmethod
-    def name(name_of_file):
-        with open(name_of_file, "r") as read_file:
-            info = json.load(read_file)
-        return info.get("Name")     
+    def get_index(self):
+        return self.weight / (self.growth * self.growth)
 
-    @staticmethod
-    def sex(name_of_file):
-        with open(name_of_file, "r") as read_file:
+    def get_water(self):
+        if self.weight <= 50:
+            return 1.5
+        elif self.weight == 55:
+            return 1.75
+        elif self.weight == 65:
+            return 2.0
+        elif self.weight == 80:
+            return 2.5
+
+    def get_calories(self):
+        if self.sex == "Жінка":
+            if self.weight <= 50:
+                return 1200
+            elif self.weight == 55:
+                return 1300
+            elif self.weight == 65:
+                return 1400
+            elif self.weight == 80:
+                return 1600
+        else:
+            if self.weight <= 50:
+                return 1600
+            elif self.weight == 55:
+                return 1800
+            elif self.weight == 65:
+                return 2200
+            elif self.weight == 80:
+                return 2600
+            
+
+    def sex1(self):
+        with open("parameters.json", "r") as read_file:
             info = json.load(read_file)
-        return info.get("Sex")     
+        for ticket in info:
+            if ticket.get("Name") == self.name:
+                return ticket.get("Sex")
         
-    @staticmethod
-    def age(name_of_file):
-        with open(name_of_file, "r") as read_file:
+    def age1(self):
+        with open("parameters.json", "r") as read_file:
             info = json.load(read_file)
-        return info.get("Age")     
+        for ticket in info:
+            if ticket.get("Name") == self.name:
+                return info.get("Age")     
     
-    @staticmethod
-    def weight(name_of_file):
-        with open(name_of_file, "r") as read_file:
+    def weight1(self):
+        with open("parameters.json", "r") as read_file:
             info = json.load(read_file)
-        return info.get("Weight")     
+        for ticket in info:
+            if ticket.get("Name") == self.name:
+                return info.get("Weight")     
         
-    @staticmethod
-    def growth(name_of_file):
-        with open(name_of_file, "r") as read_file:
+    def growth1(self):
+        with open("parameters.json", "r") as read_file:
             info = json.load(read_file)
-        return info.get("Growth")     
+        for ticket in info:
+            if ticket.get("Name") == self.name:
+                return info.get("Growth")     
 
-    @staticmethod
-    def goals(name_of_file):
-        with open(name_of_file, "r") as read_file:
+    def goals1(self):
+        with open("parameters.json", "r") as read_file:
             info = json.load(read_file)
-        return info.get("Goals")           
+        for ticket in info:
+            if ticket.get("Name") == self.name:
+                return info.get("Goals")     
+
+    def calories1(self):
+        with open("parameters.json", "r") as read_file:
+            info = json.load(read_file)
+        for ticket in info:
+            if ticket.get("Name") == self.name:
+                return info.get("Calories")  
+
+    def water1(self):
+        with open("parameters.json", "r") as read_file:
+            info = json.load(read_file)
+        for ticket in info:
+            if ticket.get("Name") == self.name:
+                return info.get("Water")   
+
+    def index1(self):
+        with open("parameters.json", "r") as read_file:
+            info = json.load(read_file)
+        for ticket in info:
+            if ticket.get("Name") == self.name:
+                return info.get("Index")       
 
     def add_user(self):  # add to .json file
         user = {
-            "Name": self.event.name,
-            "Sex": self.number,
-            "Age": self.type_t,
-            "Weight": self.days,
-            "Growth": self.price,
+            "Name": self.name,
+            "Sex": self.sex,
+            "Age": self.age,
+            "Weight": self.weight,
+            "Growth": self.growth,
+            "Goals": self.goals,
             "Index": self.index,
-            "Goals": self.goals
+            "Water": self.water,
+            "Calories": self.calories
         }
-        self.file_tickets.append(user)
+        self.file_users.append(user)
         with open("parameters.json", "w") as write_file:
-            json.dump(self.file_tickets, write_file)
+            json.dump(self.file_users, write_file)
         write_file.close()
-
-
-  
