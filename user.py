@@ -1,42 +1,52 @@
 import math
 import json
 
+
+# Клас для зберігання даних користувача
 class User:
 
-    file_users = []
-
     def __init__(self, name, sex=None, weight=None, age=None, growth=None, goals=None):
+        # Стать
         self.sex = ""
+        # Вага
         self.weight = 1
+        # Вік
         self.age = 1
+        # Зріст
         self.growth = 1
-        self.name = ""
+        # Ім'я
+        self.name = name
+        # Ціль тренуваннь
         self.goals = ""
+        # Індекс маси тіла
+        self.index = 0
+        # Кількість води на добу
+        self.water = 0
+        # Кількість калорій на добу
+        self.calories = 0
 
         if sex == "None":
             with open("parameters.json", "r") as read_file:
                 info = json.load(read_file)
-            for ticket in info:
-                if ticket.get("Name") == name:
-                    self.sex = str(self.sex1())
-                    self.weight = int(self.weight1())
-                    self.age = int(self.age1())
-                    self.growth = int(self.growth1())
-                    self.name = name
-                    self.goals = str(self.goals1())
-                    self.index = float(self.index1())
-                    self.water = float(self.water1())
-                    self.calories = int(self.calories1())
-        else:    
+            for person in info:
+                if person.get("Name") == name:
+                    self.sex1()
+                    self.weight1()
+                    self.age1()
+                    self.growth1()
+                    self.goals1()
+                    self.index1()
+                    self.water1()
+                    self.calories1()
+        else:
             self.sex = sex
             self.weight = weight
             self.age = age
             self.growth = growth
-            self.name = name
             self.goals = goals
-            self.index = self.get_index()
-            self.water = self.get_water()
-            self.calories = self.get_calories()
+            self.get_index()
+            self.get_water()
+            self.get_calories()
 
     @property
     def sex(self):
@@ -71,7 +81,7 @@ class User:
         if not isinstance(age, int):
             raise TypeError
         self.__age = age
-    
+
     @property
     def name(self):
         return self.__name
@@ -90,7 +100,7 @@ class User:
     def goals(self, goals):
         if not isinstance(goals, str):
             raise TypeError
-        self.__goals = goals    
+        self.__goals = goals
 
     @property
     def growth(self):
@@ -102,104 +112,108 @@ class User:
             raise ZeroDivisionError
         if not isinstance(growth, int):
             raise TypeError
-        self.__growth = growth            
+        self.__growth = growth
 
     def __str__(self):
-        return f"Name - {self.__name}\nSex - {self.sex}\nAge - {self.__age}\nWeight - {self.weight}\nGrowth - {self.growth}\nCalories - {self.calories}\nWater - {self.water}\nIndex - {self.index}"
+        return f"Name - {self.__name}\nSex - {self.sex}\nAge(your group) - {self.__age}\nWeight(your group) - {self.weight}\nGrowth(your group) - {self.growth}\nCalories - {self.calories}\nWater - {self.water}\nIndex - {self.index}"
 
     def __float__(self):
         return self.index
 
+    # Функція для обчислення індексу
     def get_index(self):
-        return self.weight / (self.growth * self.growth)
+        self.index = self.weight / (self.growth * self.growth)
 
+    # Функція для обчислення кількості води
     def get_water(self):
         if self.weight <= 50:
-            return 1.5
+            self.water = 1.5
         elif self.weight == 55:
-            return 1.75
+            self.water = 1.75
         elif self.weight == 65:
-            return 2.0
+            self.water = 2.0
         elif self.weight == 80:
-            return 2.5
+            self.water = 2.5
 
+    # Функція для обчислення кількості калорій
     def get_calories(self):
         if self.sex == "Жінка":
             if self.weight <= 50:
-                return 1200
+                self.calories = 1200
             elif self.weight == 55:
-                return 1300
+                self.calories = 1300
             elif self.weight == 65:
-                return 1400
+                self.calories = 1400
             elif self.weight == 80:
-                return 1600
+                self.calories = 1600
         else:
             if self.weight <= 50:
-                return 1600
+                self.calories = 1600
             elif self.weight == 55:
-                return 1800
+                self.calories = 1800
             elif self.weight == 65:
-                return 2200
+                self.calories = 2200
             elif self.weight == 80:
-                return 2600
-            
+                self.calories = 2600
 
+    # Отримання даних з файлу
     def sex1(self):
         with open("parameters.json", "r") as read_file:
             info = json.load(read_file)
-        for ticket in info:
-            if ticket.get("Name") == self.name:
-                return ticket.get("Sex")
-        
+        for person in info:
+            if person.get("Name") == self.name:
+                self.sex = person.get("Sex")
+
     def age1(self):
         with open("parameters.json", "r") as read_file:
             info = json.load(read_file)
-        for ticket in info:
-            if ticket.get("Name") == self.name:
-                return info.get("Age")     
-    
+        for person in info:
+            if person.get("Name") == self.name:
+                self.age = person.get("Age")
+
     def weight1(self):
         with open("parameters.json", "r") as read_file:
             info = json.load(read_file)
-        for ticket in info:
-            if ticket.get("Name") == self.name:
-                return info.get("Weight")     
-        
+        for person in info:
+            if person.get("Name") == self.name:
+                self.weight = person.get("Weight")
+
     def growth1(self):
         with open("parameters.json", "r") as read_file:
             info = json.load(read_file)
-        for ticket in info:
-            if ticket.get("Name") == self.name:
-                return info.get("Growth")     
+        for person in info:
+            if person.get("Name") == self.name:
+                self.growth = person.get("Growth")
 
     def goals1(self):
         with open("parameters.json", "r") as read_file:
             info = json.load(read_file)
-        for ticket in info:
-            if ticket.get("Name") == self.name:
-                return info.get("Goals")     
+        for person in info:
+            if person.get("Name") == self.name:
+                self.goals = person.get("Goals")
 
     def calories1(self):
         with open("parameters.json", "r") as read_file:
             info = json.load(read_file)
-        for ticket in info:
-            if ticket.get("Name") == self.name:
-                return info.get("Calories")  
+        for person in info:
+            if person.get("Name") == self.name:
+                self.calories = person.get("Calories")
 
     def water1(self):
         with open("parameters.json", "r") as read_file:
             info = json.load(read_file)
-        for ticket in info:
-            if ticket.get("Name") == self.name:
-                return info.get("Water")   
+        for person in info:
+            if person.get("Name") == self.name:
+                self.water = person.get("Water")
 
     def index1(self):
         with open("parameters.json", "r") as read_file:
             info = json.load(read_file)
-        for ticket in info:
-            if ticket.get("Name") == self.name:
-                return info.get("Index")       
+        for person in info:
+            if person.get("Name") == self.name:
+                self.index = person.get("Index")
 
+    # Запис нового користувача до файлу
     def add_user(self):  # add to .json file
         user = {
             "Name": self.name,
@@ -212,7 +226,13 @@ class User:
             "Water": self.water,
             "Calories": self.calories
         }
-        self.file_users.append(user)
+        with open("parameters.json", "r") as read_file:
+            try:
+                data = json.load(read_file)
+            except Exception as e:
+                data = []
+        read_file.close()
+        data.append(user)
         with open("parameters.json", "w") as write_file:
-            json.dump(self.file_users, write_file)
+            json.dump(data, write_file)
         write_file.close()
