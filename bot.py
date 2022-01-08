@@ -23,20 +23,41 @@ def welcome(message):
 
 @bot.message_handler(content_types=['text'])
 def lalala(message):
+    global name 
+    name = message.from_user.first_name
+
     if message.chat.type == 'private':
-        if message.text == '💤 Сон':
-            bot.send_message(message.chat.id, "Вкажіть час коли ви хочте лягати спати, Вам необхідно поспати 8 годин!")
-        elif message.text == '💪 Тренування':
- 
-            markup = types.InlineKeyboardMarkup(row_width=2)
-            item1 = types.InlineKeyboardButton("Біцепс", callback_data='biceps')
-            item2 = types.InlineKeyboardButton("Ноги", callback_data='legs')
- 
-            markup.add(item1, item2)
- 
-            bot.send_message(message.chat.id, 'Оберіть тип сьогоднішнього тренування.', reply_markup=markup)
-        else:
-            bot.send_message(message.chat.id, 'Я не знаю що відповісти 😢')
+        if message.text == '📒 Блокнот':
+            with open("parameters.json", "r") as read_f:
+                try:
+                    data = json.load(read_f)
+                except Exception as e:
+                    data = []
+            read_f.close()
+            exists=False
+            if len(data)!=0:
+                for user in data:
+                    if user['Name'] == name:
+                        exists=True
+            if not exists:
+
+                bot.send_message(message.chat.id, "Заповніть наступні дані:")
+
+                markup = types.InlineKeyboardMarkup(row_width=2)
+                item1 = types.InlineKeyboardButton("Чоловік", callback_data='sex1')
+                item2 = types.InlineKeyboardButton("Жінка", callback_data='sex2') 
+                markup.add(item1, item2)
+     
+                bot.send_message(message.chat.id, 'Оберіть стать.', reply_markup=markup) 
+
+                markup1 = types.InlineKeyboardMarkup(row_width=2)
+                item1 = types.InlineKeyboardButton("14-16", callback_data='age1')
+                item2 = types.InlineKeyboardButton("16-18", callback_data='age2') 
+                item3 = types.InlineKeyboardButton("18-24", callback_data='age3') 
+                item4 = types.InlineKeyboardButton("24-30", callback_data='age4') 
+                markup1.add(item1, item2, item3, item4)
+     
+                bot.send_message(message.chat.id, 'Вкажіть Ваш вік', reply_markup=markup1) 
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_inline(call):
