@@ -1,0 +1,6 @@
+schedule==1.1.0
+telebot==0.0.4
+simplejson==3.17.6
+times==0.7
+threaded==4.1.0
+python-math==0.0.1
